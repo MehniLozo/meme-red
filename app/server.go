@@ -16,18 +16,20 @@ func requestReponse(bind net.Conn) {
 	bind.Write([]byte("+PONG\r\n"))
 }
 func main() {
-	// You can use print statements as follows for debugging, they'll be visible when running tests.
-	fmt.Println("Logs from your program will appear here!")
+	fmt.Println("Logs from a very professional redis")
 
 	l, err := net.Listen("tcp", "0.0.0.0:6379")
 	if err != nil {
 		fmt.Println("Failed to bind to port 6379")
 		os.Exit(1)
 	}
-	for {
+	closed := false
+	for !closed {
 		bind, err := l.Accept()
 		if err != nil {
 			fmt.Println("Error accepting connection: ", err.Error())
+			bind.Close()
+			closed = true
 			os.Exit(1)
 		}
 		go requestReponse(bind)
