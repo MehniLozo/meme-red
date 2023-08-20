@@ -1,6 +1,7 @@
 package main
 
 import (
+	helpers "app/helpers"
 	"bufio"
 	"fmt"
 	"net"
@@ -18,7 +19,18 @@ func requestReponse(bind net.Conn) {
 func main() {
 	fmt.Println("Logs from a very professional redis")
 
-	l, err := net.Listen("tcp", "0.0.0.0:6379")
+	addr := net.TCPAddr{}
+	addr.Port = 6379
+	addr.IP = net.IPv4(0, 0, 0, 0)
+
+	//l, err := net.Listen("tcp", "0.0.0.0:6379")
+	l, err := net.ListenTCP("tcp", &addr)
+
+	if err != nil {
+		fmt.Println("Error listening on tcp", err)
+		helpers.Die("Error while listening")
+	}
+	defer l.Close()
 	if err != nil {
 		fmt.Println("Failed to bind to port 6379")
 		os.Exit(1)
@@ -34,4 +46,5 @@ func main() {
 		}
 		go requestReponse(bind)
 	}
+
 }
