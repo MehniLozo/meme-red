@@ -29,3 +29,28 @@ func Create() *ConcurrentMap {
 	}
 	return &hashmap
 }
+func (c *ConcurrentMap) Set(key string, value string) {
+	c.mutex.Lock()
+	c.data[key] = &Val{
+		value:       value,
+		setAt:       time.Now(),
+		expireAfter: 0,
+		expire:      false,
+	}
+	c.mutex.Unlock()
+}
+func (c *ConcurrentMap) Get(key string) (string, bool) {
+	c.mutex.RLock()
+	valueItem, exists := c.data[key]
+	if !exists {
+		c.mutex.RUnlock()
+		return "", false
+	}
+
+	if valueItem.expire && time.Now().Sub(valueItem.setAt) > valueItem.expireAfter {
+		c.mutex.RUnlock()
+		return "", false
+	}
+	c.mutex.RUnlock()
+	return valueItem.value, exists
+}
