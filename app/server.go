@@ -1,11 +1,12 @@
 package main
 
 import (
-	helpers "app/helpers"
 	"bufio"
 	"fmt"
 	"net"
 	"os"
+
+	helpers "github.com/MehniLozo/meme-red/helpers"
 )
 
 func requestReponse(bind net.Conn) {

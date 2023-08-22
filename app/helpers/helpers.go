@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func Log(msg string) {
+func log(msg string) {
 	fmt.Println(msg)
 
 }
