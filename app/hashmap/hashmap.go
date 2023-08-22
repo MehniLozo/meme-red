@@ -54,3 +54,22 @@ func (c *ConcurrentMap) Get(key string) (string, bool) {
 	c.mutex.RUnlock()
 	return valueItem.value, exists
 }
+func (c *ConcurrentMap) Expire(key string, timeSeconds int) int {
+	if val, ok := c.Get(key); !ok {
+		_ = val
+		return 0
+	}
+	c.mutex.Lock()
+	c.data[key].expire = true
+	c.data[key].expireAfter = time.Duration(timeSeconds) * time.Second
+	c.mutex.Unlock()
+	time.AfterFunc(time.Duration(timeSeconds)*time.Second, func() {
+		c.mutex.Lock()
+
+		if c.data[key].expire {
+			delete(c.data, key)
+		}
+		c.mutex.Unlock()
+	})
+	return 1
+}
