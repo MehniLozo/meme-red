@@ -2,6 +2,7 @@ package structs
 
 import (
 	"math/rand"
+	"time"
 )
 
 const MAX = 25
@@ -22,4 +23,27 @@ type SkipList struct {
 type Level struct {
 	followingSkip     *SkipNode
 	distanceFollowing uint64
+}
+
+func SpawnSkipList() *SkipList {
+	res := &SkipList{
+		head: &SkipNode{
+			content: 0.0,
+			member:  "",
+			levels:  make([]*Level, MAX),
+		},
+		level:  1,
+		length: 0,
+		random: rand.New(rand.NewSource(time.Now().UnixNano())),
+	}
+
+	for i := 0; i < MAX; i++ {
+		res.head.levels[i] = &Level{
+			followingSkip:     nil,
+			distanceFollowing: 0,
+		}
+	}
+
+	res.tail = nil
+	return res
 }
