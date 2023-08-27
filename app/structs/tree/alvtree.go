@@ -131,3 +131,27 @@ func (t *Tree[T]) rRotation(n *Node[T]) *Node[T] {
 
 	return a
 }
+
+func min[T types.Flexy](node *Node[T]) *Node[T] {
+	if node == nil {
+		return node
+	}
+
+	for node.children[0] != nil {
+		node = node.children[0]
+	}
+
+	return node
+}
+
+func maxi[T types.Flexy](node *Node[T]) *Node[T] {
+	if node == nil {
+		return node
+	}
+
+	for node.children[1] != nil {
+		node = node.children[1]
+	}
+
+	return node
+}
