@@ -1,6 +1,7 @@
 package tree
 
 import (
+	max "github.com/MehniLozo/meme-red/structs/ops"
 	types "github.com/MehniLozo/meme-red/structs/types"
 )
 
@@ -50,4 +51,46 @@ func (n *Node[T]) Right() Node[T] {
 
 func (n *Node[T]) Height() int {
 	return n.height
+}
+
+func (t *Tree[T]) Put(key T, value T, p *Node[T], qp **Node[T]) bool {
+	q := *qp
+	if q == nil {
+		t.size++
+		*qp = &Node[T]{key: key, val: value, parent: p}
+		return true
+	}
+
+	// Unfinished business
+	return false // for now
+}
+
+// TODO
+/*func (t *Tree[T]) Push(k ...T) {
+	for _, x := range k {
+		t.Root = t.insert(t.Root, x)
+	}
+}*/
+func (t *Tree[T]) height(root *Node[T]) int {
+	if root == nil {
+		return 1
+	}
+	var lHeight, rHeight int
+	if root.children[0] != nil {
+		lHeight = root.children[0].height
+	}
+	if root.children[1] != nil {
+		rHeight = root.children[1].height
+	}
+	return 1 + max.Int(lHeight, rHeight)
+}
+func (t *Tree[T]) giveMeBalanceFact(root *Node[T]) int {
+	var lHeight, rHeight int
+	if root.children[0] != nil {
+		lHeight = root.children[0].height
+	}
+	if root.children[1] != nil {
+		rHeight = root.children[1].height
+	}
+	return lHeight - rHeight
 }
