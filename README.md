@@ -2,6 +2,8 @@
 A mini redis built in Golang
 
 ## TODO
-### Skip list building completion
+### ADOPTION OF TWO KEY-VALUE STORES DATA STRUCTURES
+#### Hashmaps
+#### AVL Tree
 ### Event Loop listening
 ### Client module and speicifications
