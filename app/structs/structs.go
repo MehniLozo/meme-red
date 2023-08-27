@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const MAX = 25
+const LIMIT = 25
 
 type SkipNode struct {
 	member  string
@@ -30,14 +30,14 @@ func SpawnSkipList() *SkipList {
 		head: &SkipNode{
 			content: 0.0,
 			member:  "",
-			levels:  make([]*Level, MAX),
+			levels:  make([]*Level, LIMIT),
 		},
 		level:  1,
 		length: 0,
 		random: rand.New(rand.NewSource(time.Now().UnixNano())),
 	}
 
-	for i := 0; i < MAX; i++ {
+	for i := 0; i < LIMIT; i++ {
 		res.head.levels[i] = &Level{
 			followingSkip:     nil,
 			distanceFollowing: 0,
@@ -46,4 +46,19 @@ func SpawnSkipList() *SkipList {
 
 	res.tail = nil
 	return res
+}
+
+func CreateSkipNode(level uint, content float64, member string) *SkipNode {
+	entity := &SkipNode{
+		content: content,
+		member:  member,
+		levels:  make([]*Level, level),
+	}
+	for j := 0; j < int(level); j++ {
+		entity.levels[j] = &Level{
+			followingSkip:     nil,
+			distanceFollowing: 0,
+		}
+	}
+	return entity
 }
