@@ -97,12 +97,30 @@ func (t *Tree[T]) giveMeBalanceFact(root *Node[T]) int {
 
 func (t *Tree[T]) lRotation(n *Node[T]) *Node[T] {
 	a := n.children[1]
-	c := a.children[0]
+	al := a.children[0]
 	a.children[0] = n
-	n.children[1] = c
+	n.children[1] = al
 
-	if c != nil {
-		c.parent = n
+	if al != nil {
+		al.parent = n
+	}
+
+	a.parent = n.parent
+	n.parent = a
+
+	n.height = t.height(n)
+	a.height = t.height(a)
+
+	return a
+}
+func (t *Tree[T]) rRotation(n *Node[T]) *Node[T] {
+	a := n.children[0]
+	ar := a.children[1]
+	a.children[1] = n
+	n.children[0] = ar
+
+	if ar != nil {
+		ar.parent = n
 	}
 
 	a.parent = n.parent
