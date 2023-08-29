@@ -16,7 +16,7 @@ const (
 	dep, middle, final position = 0, 1, 2
 )
 
-func (tree *Tree[T]) Iterator()
+//func (tree *Tree[T]) Iterator()
 
 /* func (iterator *Iterator[T]) Next() bool {
 	switch iterator.pos {
