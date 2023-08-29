@@ -27,10 +27,17 @@ func (t *Tree[T]) Size() int {
 	return t.size
 }
 
+func (t *Tree[T]) Get(key T) (value interface{}, found bool) {
+	node := t.GetNode(key)
+	if node != nil {
+		return node.val, true
+	}
+	return nil, false
+}
 func (t *Tree[T]) GetNode(key T) *Node[T] {
 	r := t.Root
 	for r != nil {
-		a := t.Analog(key, r.key)
+		a := t.Analog(key, r.key) // Look for a comparion analogy
 		switch {
 		case a == 0:
 			return r
@@ -140,6 +147,21 @@ func (t *Tree[T]) rRotation(n *Node[T]) *Node[T] {
 	a.height = t.height(a)
 
 	return a
+}
+
+// When left subtree is too deep
+func (Node[T]) fixLeft(t *Tree[T], r *Node[T]) *Node[T] {
+	if r.children[0].Height() < r.children[1].Height() {
+		r.children[0] = t.lRotation(r.children[0])
+	}
+	return t.rRotation(r)
+}
+
+func (Node[T]) fixRight(t *Tree[T], r *Node[T]) *Node[T] {
+	if r.children[1].Height() < r.children[0].Height() {
+		r.children[0] = t.rRotation(r.children[1])
+	}
+	return t.lRotation(r)
 }
 
 func min[T types.Flexy](node *Node[T]) *Node[T] {
