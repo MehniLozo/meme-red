@@ -82,12 +82,37 @@ func (t *Tree[T]) Put(key T, value T, p *Node[T], qp **Node[T]) bool {
 	return false // for now
 }
 
-// TODO
-/*func (t *Tree[T]) Push(k ...T) {
+func (t *Tree[T]) Push(k ...T) {
 	for _, x := range k {
-		t.Root = t.insert(t.Root, x)
+		t.Root = t.Insert(t.Root, x)
 	}
-}*/
+}
+
+// Right after calling an insert function, you have to call the fixTree to balance the tree
+func (t *Tree[T]) Insert(r *Node[T], k T) *Node[T] {
+	if r == nil {
+		return &Node[T]{
+			key:      k,
+			children: [2]*Node[T]{nil, nil},
+			parent:   nil,
+			height:   1,
+		}
+	}
+
+	switch {
+	case k < r.key:
+		temp := t.Insert(r.children[0], k)
+		temp.parent = r
+		r.children[0] = temp
+	case k > r.key:
+		temp := t.Insert(r.children[1], k)
+		temp.parent = r
+		r.children[1] = temp
+	default:
+		return r
+	}
+	return t.AvlFixAll(r)
+}
 func (t *Tree[T]) height(root *Node[T]) int {
 	if root == nil {
 		return 1
