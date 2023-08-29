@@ -150,18 +150,52 @@ func (t *Tree[T]) rRotation(n *Node[T]) *Node[T] {
 }
 
 // When left subtree is too deep
-func (Node[T]) fixLeft(t *Tree[T], r *Node[T]) *Node[T] {
+func (r *Node[T]) FixLeft(t *Tree[T]) *Node[T] {
 	if r.children[0].Height() < r.children[1].Height() {
 		r.children[0] = t.lRotation(r.children[0])
 	}
 	return t.rRotation(r)
 }
 
-func (Node[T]) fixRight(t *Tree[T], r *Node[T]) *Node[T] {
+func (r *Node[T]) FixRight(t *Tree[T]) *Node[T] {
 	if r.children[1].Height() < r.children[0].Height() {
 		r.children[0] = t.rRotation(r.children[1])
 	}
 	return t.lRotation(r)
+}
+func treeUpdate[T types.Flexy](n *Node[T]) {
+	n.height = 1 + max.Int(n.children[0].height, n.children[1].height)
+}
+
+// for imbalanced nodes & invariants til the reach of the root
+func (t *Tree[T]) AvlFixAll(n *Node[T]) *Node[T] {
+	for {
+		treeUpdate(n)
+		l := n.children[0].height
+		r := n.children[1].height
+
+		var f **Node[T] = nil
+
+		if n.parent != nil {
+			if n.parent.children[0] == n {
+				*f = n.parent.children[0]
+			} else {
+				*f = n.parent.children[1]
+			}
+		}
+
+		if l == r+2 {
+			n = n.FixLeft(t)
+		} else if l+2 == r {
+			n = n.FixRight(t)
+		}
+		if f == nil {
+			return n
+		}
+
+		*f = n
+		n = n.parent
+	}
 }
 
 func min[T types.Flexy](node *Node[T]) *Node[T] {
