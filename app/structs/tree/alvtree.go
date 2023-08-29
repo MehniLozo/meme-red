@@ -5,8 +5,6 @@ import (
 	types "github.com/MehniLozo/meme-red/structs/types"
 )
 
-type Analog func(x, y interface{}) int
-
 type Node[T types.Flexy] struct {
 	key      T
 	val      interface{}
@@ -29,8 +27,20 @@ func (t *Tree[T]) Size() int {
 	return t.size
 }
 
-func (t *Tree[T]) GetNode(key T) {
-
+func (t *Tree[T]) GetNode(key T) *Node[T] {
+	r := t.Root
+	for r != nil {
+		a := t.Analog(key, r.key)
+		switch {
+		case a == 0:
+			return r
+		case a < 0:
+			r = r.children[0]
+		case a > 0:
+			r = r.children[1]
+		}
+	}
+	return r
 }
 
 func (n *Node[T]) Parent() Node[T] {
