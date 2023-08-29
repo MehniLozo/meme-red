@@ -58,12 +58,12 @@ func (n *Node[T]) Key() T {
 	return n.key
 }
 
-func (n *Node[T]) Left() Node[T] {
-	return *n.children[0]
+func (n *Node[T]) Left() *Node[T] {
+	return n.children[0]
 }
 
-func (n *Node[T]) Right() Node[T] {
-	return *n.children[1]
+func (n *Node[T]) Right() *Node[T] {
+	return n.children[1]
 }
 
 func (n *Node[T]) Height() int {
@@ -111,7 +111,8 @@ func (t *Tree[T]) Insert(r *Node[T], k T) *Node[T] {
 	default:
 		return r
 	}
-	return t.AvlFixAll(r)
+	return r
+	//return t.AvlFixAll(r)
 }
 func (t *Tree[T]) height(root *Node[T]) int {
 	if root == nil {
