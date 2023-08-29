@@ -246,3 +246,51 @@ func maxi[T types.Flexy](node *Node[T]) *Node[T] {
 
 	return node
 }
+func (t *Tree[T]) delete(n *Node[T]) *Node[T] {
+	if n.children[1] == nil {
+		parent := n.parent
+		if n.children[0] != nil {
+			n.children[0] = parent
+		}
+
+		if parent != nil {
+			if parent.children[0] == n {
+				parent.children[0] = parent.children[1]
+			} else {
+				parent.children[1] = n.children[0]
+			}
+
+			return t.AvlFixAll(parent)
+		} else {
+			return n.children[0]
+		}
+	} else {
+		x := n.children[1]
+		for x.children[0] != nil {
+			x = x.children[0]
+		}
+
+		r := t.delete(x)
+
+		*x = *n
+		if x.children[0] != nil {
+			x.children[0].parent = x
+		}
+		if x.children[1] != nil {
+			x.children[1].parent = x
+		}
+
+		parent := n.parent
+
+		if parent != nil {
+			if parent.children[0] == n {
+				parent.children[0] = x
+			} else {
+				parent.children[1] = x
+			}
+			return r
+		} else {
+			return x
+		}
+	}
+}
